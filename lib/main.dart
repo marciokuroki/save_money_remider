@@ -4,62 +4,119 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  String dropdownValue = 'semanal';
+
   @override
   Widget build(BuildContext context) {
+    Color color = Theme.of(context).primaryColor;
+
+    Widget bottonSection = Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildButtonColumn(color, Icons.app_registration, 'CRIAR'),
+          _buildButtonColumn(color, Icons.cancel_outlined, 'CANCELAR'),
+        ],
+      ),
+    );
+
+    Widget formSection = Container(
+      child: Column(
+        children: [
+          TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Nome da Meta',
+            ),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Quanto você pretende salvar?',
+            ),
+          ),
+          TextField(
+            decoration: InputDecoration(
+              border: InputBorder.none,
+              hintText: 'Quando você quer atingir a meta?',
+            ),
+          ),
+          DropdownButton(
+            value: dropdownValue,
+            icon: Icon(Icons.widgets),
+            iconSize: 24,
+            elevation: 16,
+            items: <String>['52 Semanas', 'semanal', 'quinzenal', 'mensal']
+                .map<DropdownMenuItem<String>>(
+                    (String value) => DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        ))
+                .toList(),
+            underline: Container(
+              height: 2,
+              color: Colors.deepPurpleAccent,
+            ),
+            onChanged: (String newValue) {
+              setState(() {
+                dropdownValue = newValue;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Save Money Reminder',
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text('Save Money Remider'),
+        ),
+        body: Column(
+          children: [
+            Image.asset(
+              'images/save_money.jpeg',
+              width: 600,
+              height: 240,
+              fit: BoxFit.cover,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            formSection,
+            bottonSection,
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    );
+  }
+
+  Column _buildButtonColumn(Color color, IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon, color: color),
+        Container(
+          margin: const EdgeInsets.only(top: 8),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w400,
+              color: color,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
